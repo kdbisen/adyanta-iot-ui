@@ -31,7 +31,9 @@ pipeline {
             stage('Run Nginx Docker Container') {
                   steps {
                       script {
-                          docker.run('-p 42020:42020 --name adyanta-iot-ui-container adyanta-iot-ui')  // Run Nginx Docker container
+                           docker.image('adyanta-iot-ui').run('-p 42020:42020', '--name adyanta-iot-ui-container')  // Run Nginx Docker container
+
+                       //   docker.run('-p 42020:42020 --name adyanta-iot-ui-container adyanta-iot-ui')  // Run Nginx Docker container
                       }
                   }
             }
