@@ -50,7 +50,10 @@ pipeline {
                  script {
                      // Run the new container
                      //docker.run("-d -p 42020:42020 --name ${CONTAINER_NAME} ${DOCKER_IMAGE_NAME}:${UNIQUE_TAG}")
-                      docker.image('${DOCKER_IMAGE_NAME}:${UNIQUE_TAG}').run('-p 42020:42020', '--name ${CONTAINER_NAME}')  // Run Nginx Docker container
+                     // docker.image("${DOCKER_IMAGE_NAME}:${UNIQUE_TAG}").run('-p 42020:42020', '--name '${CONTAINER_NAME})  // Run Nginx Docker container
+
+                      def image = docker.image("${DOCKER_IMAGE_NAME}:${UNIQUE_TAG}")
+                                          image.run("-d -p 42020:42020 --name ${CONTAINER_NAME}")
 
                  }
              }
