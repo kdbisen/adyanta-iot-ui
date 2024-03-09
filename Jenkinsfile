@@ -11,11 +11,11 @@ pipeline {
         }
 
         stage('Build') {
-            steps {
-                // Install dependencies and build the project
-                sh 'npm install'
-                sh 'npm run build'
-            }
+         // Use Node.js and npm from Jenkins configuration
+                withNodejs(nodejsInstallationName: 'Node.js') {
+                    sh 'npm install'
+                    sh 'npm run build'
+                }
         }
 
         stage('Deploy') {
