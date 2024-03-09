@@ -1,13 +1,19 @@
 // ApiService.ts
 
 import axios, { AxiosResponse } from 'axios';
+import {Env} from "../Env.ts";
 
 // Define your base URL for the backend server
-const baseURL = 'http://localhost:8080';
+const baseURL = `${Env.API_BASE_URL}`;
+
 
 // Create an Axios instance with baseURL
 const axiosInstance = axios.create({
     baseURL,
+    headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${localStorage.getItem('token')}` // Attach token to Authorization header
+    }
 });
 
 // Define custom types for response and error

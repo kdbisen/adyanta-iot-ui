@@ -1,5 +1,11 @@
 // AuthService.ts
 
+
+import {Env} from "../Env.ts";
+
+
+
+
 export const AuthService = {
     // Method to log in user
     login: async (credentials: { username: string; password: string }): Promise<string | null> => {
@@ -9,7 +15,7 @@ export const AuthService = {
         // Otherwise, return null
         try {
             // Example of sending a request to the backend for authentication
-            const response = await fetch('http://localhost:8080/api/auth/signin', {
+            const response = await fetch(`${Env.API_BASE_URL}`+'/api/auth/signin', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
