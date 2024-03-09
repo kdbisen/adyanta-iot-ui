@@ -10,13 +10,15 @@ pipeline {
             }
         }
 
-        stage('Build') {
-         // Use Node.js and npm from Jenkins configuration
-                withNodejs(nodejsInstallationName: 'Node.js') {
-                    sh 'npm install'
-                    sh 'npm run build'
-                }
-        }
+      stage('Build') {
+          steps {
+              // Use Node.js and npm from Jenkins configuration
+              withNodejs(nodejsInstallationName: 'Node.js') {
+                  sh 'npm install'
+                  sh 'npm run build'
+              }
+          }
+      }
 
         stage('Deploy') {
             steps {
