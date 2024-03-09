@@ -16,12 +16,7 @@ pipeline {
                 git credentialsId: 'JENKINS_GITHUB_TOKEN', url: 'https://github.com/kdbisen/adyanta-iot-ui.git'
             }
         }
-        stage('Build') {
-                    steps {
-                        sh 'npm install'
-                        sh 'npm run build'
-                    }
-        }
+
 
         stage('Generate Unique Tag') {
                     steps {
