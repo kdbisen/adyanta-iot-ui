@@ -10,7 +10,7 @@ import AddDeviceForm from "./AddDeviceForm.tsx";
 import Inventory2Icon from '@mui/icons-material/Inventory2';
 import MemoryIcon from '@mui/icons-material/Memory';
 
-import {Button, List, ListItem, ListItemButton, ListItemIcon, ListItemText, SwipeableDrawer} from '@mui/material';
+import {Button,  ListItem, ListItemButton, ListItemIcon, ListItemText, SwipeableDrawer} from '@mui/material';
 
 const drawerWidth = 240;
 

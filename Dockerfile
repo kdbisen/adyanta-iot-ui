@@ -1,18 +1,14 @@
-# use the latest node LTS release
-FROM node:gallium
-WORKDIR /usr/src/app
-
-
-# copy package.json and package-lock.json and install packages. we do this
-# separate from the application code to better use docker's caching
-# `npm install` will be cached on future builds if only the app code changed
+# Stage 1: Build the React Application
+FROM node:18 as build
+WORKDIR /app
 COPY package*.json ./
 RUN npm install
-
-# copy the app
 COPY . .
+RUN npm run build
 
-# expose port 3000 and start the app
-EXPOSE 3000
-CMD [ "npm", "start" ]
-
+# Stage 2: Setup the Nginx Server to serve the React Application
+FROM nginx:1.25.0-alpine as production
+COPY --from=build /app/dist /usr/share/nginx/html
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+EXPOSE 90
+CMD ["nginx", "-g", "daemon off;"]

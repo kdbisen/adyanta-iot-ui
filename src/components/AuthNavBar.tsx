@@ -10,11 +10,11 @@ import {RootState} from "../redux/store.ts";
 const AuthNavBar: React.FC = () => {
 
     const isAuthenticated = useSelector((state: RootState) => state.auth.isAuthenticated);
-    const user = useSelector((state: RootState) => {
+/*    const user = useSelector((state: RootState) => {
 
         console.log(state)
         return state.auth.user;
-    });
+    });*/
     const dispatch = useDispatch();
 
     useEffect(() => {
