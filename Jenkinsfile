@@ -20,17 +20,20 @@ pipeline {
 //           }
 //       }
 
-        stage('Deploy') {
-            steps {
-                // Build and run Docker image
-                script {
-                    docker.build('adyanta-iot-ui')  // Build Docker image
-                    docker.image('adyanta-iot-ui').push('latest')  // Push the image to a registry
-                    //docker.withRegistry('your-docker-registry', 'your-docker-credentials-id') {
-                      //  docker.image('adyanta-iot-ui').push('latest')  // Push the image to the registry
-                    //}
-                }
+            stage('Build Nginx Docker Image') {
+                  steps {
+                      script {
+                          docker.build('adyanta-iot-ui', '-f Dockerfile .')  // Build Nginx Docker image
+                      }
+                  }
+              }
+
+            stage('Run Nginx Docker Container') {
+                  steps {
+                      script {
+                          docker.run('-p 42020:42020 --name adyanta-iot-ui-container adyanta-iot-ui')  // Run Nginx Docker container
+                      }
+                  }
             }
-        }
     }
 }
