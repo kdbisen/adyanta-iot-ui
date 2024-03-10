@@ -6,16 +6,14 @@ import AddProductForm from "./AddProductForm.tsx";
 import ProductList from "./ProductList.tsx";
 import DeviceList from "./DeviceList.tsx";
 import AddDeviceForm from "./AddDeviceForm.tsx";
-//import withAuth from '../services/withAuth.tsx';
 import {useAuth} from "../services/AuthContext.tsx";
-import {Typography} from "@mui/material";
 
 
 
 const Dashboard: React.FC = ( ) => {
     const { userResponse } = useAuth();
     console.log(userResponse)
-    const [selectedMenu, setSelectedMenu] = useState('');
+    const [selectedMenu, setSelectedMenu] = useState('Devices');
 
     return (
         <div>
@@ -23,18 +21,18 @@ const Dashboard: React.FC = ( ) => {
             {/*<SilentTokenRefresh/>*/}
 
             <div style={{display: 'flex'}}>
-                <Typography variant={"h2"}>Welcome {userResponse?.user.fullName}</Typography>
+
                 <div style={{flexGrow: 1, padding: '20px'}}>
                     {selectedMenu === 'Devices' && (
                         <>
-                            <h1>Add Device</h1>
+
                             <AddDeviceForm/>
-                            <DeviceList/>
+                            <DeviceList devices={[]}/>
                         </>
                     )}
                     {selectedMenu === 'Products' && (
                         <>
-                            <h1>Add Product</h1>
+
                             <AddProductForm/>
                             <ProductList/>
                         </>
