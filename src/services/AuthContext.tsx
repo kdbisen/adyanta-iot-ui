@@ -1,15 +1,22 @@
-// AuthContext.tsx
-import React, { createContext, useContext, useState } from 'react';
+// AuthProvider.tsx
+import React, {createContext, ReactNode, useContext, useState} from 'react';
+
+/*type User = {
+    username: string;
+};*/
 
 interface User {
-    username: string;
+    id: number;
+    email: string;
+    fullName: string;
+    roles: string[];
 }
 
-interface AuthContextType {
+type AuthContextType = {
     user: User | null;
-    login: (token: string) => void;
-    logout: () => void;
-}
+    loginUser: (token: string, user: User) => void;
+    logoutUser: () => void;
+};
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
@@ -21,23 +28,24 @@ export const useAuth = () => {
     return context;
 };
 
-export const AuthProvider: React.FC = ({ children }) => {
+export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     const [user, setUser] = useState<User | null>(null);
 
-    const login = (token: string) => {
+    const loginUser = (token: string, user: User) => {
         // Here you can decode the token and extract user information
         // For simplicity, let's assume token contains username
-        const decodedToken = JSON.parse(atob(token.split('.')[1]));
-        setUser({ username: decodedToken.username });
+      //  const decodedToken = JSON.parse(atob(token.split('.')[1]));
+        localStorage.setItem('token', token);
+        setUser(user);
     };
 
-    const logout = () => {
+    const logoutUser = () => {
         setUser(null);
     };
 
     return (
-        <AuthContext.Provider value={{ user, login, logout }}>
-            {children}
+        <AuthContext.Provider value={{ user, loginUser, logoutUser }}>
+            {children} {/* This is where TypeScript might raise an error */}
         </AuthContext.Provider>
     );
 };

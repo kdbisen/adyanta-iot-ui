@@ -3,20 +3,17 @@ import React from 'react';
 import { Navigate, Route, RouteProps } from 'react-router-dom';
 import { useAuth } from './AuthContext';
 
-interface ProtectedRouteProps extends RouteProps {
-    component: React.ComponentType<any>;
-}
+type ProtectedRouteProps = {
+    element: React.ReactNode;
+} & RouteProps;
 
-const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
-                                                           component: Component,
-                                                           ...rest
-                                                       }) => {
+const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ element, ...rest }) => {
     const { user } = useAuth();
 
     return (
         <Route
             {...rest}
-            element={user ? <Component /> : <Navigate to="/login" />}
+            element={user ? element : <Navigate to="/signin" />}
         />
     );
 };

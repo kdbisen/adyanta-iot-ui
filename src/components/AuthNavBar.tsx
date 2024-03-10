@@ -1,67 +1,114 @@
-import React, {useEffect} from 'react';
-import {AppBar, Toolbar, Typography,  Button} from '@mui/material';
-import {apiService} from "../services/ApiService.ts";
-import { useSelector, useDispatch } from 'react-redux';
+import React, { useState } from 'react';
+import { connect } from 'react-redux';
+import {
+    AppBar,
+    Toolbar,
+    IconButton,
+    Typography,
+    Drawer,
 
-import { logout } from '../redux/authSlice';
-import {RootState} from "../redux/store.ts";
+    ListItem,
+    ListItemText,
+    Menu,
+    MenuItem,
+    ListItemButton, ListItemIcon
+} from '@mui/material';
+import MenuIcon from '@mui/icons-material/Menu';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import { RootState } from '../redux/store';
+import Inventory2Icon from "@mui/icons-material/Inventory2";
+import MemoryIcon from "@mui/icons-material/Memory";
+import {useAuth} from "../services/AuthContext.tsx"; // Import your root state type
+
+// Define a type for user details
 
 
-const AuthNavBar: React.FC = () => {
+// Map Redux state to component props
+const mapState = (state: RootState) => ({
+    user: state.auth.user // Assuming you have a slice named "user" in your Redux store
+});
 
-    const isAuthenticated = useSelector((state: RootState) => state.auth.isAuthenticated);
-/*    const user = useSelector((state: RootState) => {
+// Define props type including Redux props
+//type PropsFromRedux = ConnectedProps<typeof connector>;
 
-        console.log(state)
-        return state.auth.user;
-    });*/
-    const dispatch = useDispatch();
+// Combine component props and Redux props
+//type Props = PropsFromRedux;
 
-    useEffect(() => {
-        console.log(isAuthenticated)
-        localStorage.getItem('token')
-        if(!localStorage.getItem('token')) {
-          window.location.href = '/signin';
-        }
-    })
+interface Props  {
+    setSelectedMenu: (menuTitle: string) => void;
+}
 
-    const handleSignout = async ( ) => {
-        // Clear the token from local storage
 
-        // Clear the authentication status
+function AuthNavBar(props: Props) {
+    const { user } = useAuth();
+    console.log(props)
+    console.log(user)
+    const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+    const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
-        const response = await apiService.postData('/api/auth/signout',{});
-        console.log('Data posted successfully:', response.data);
-        if(response){
-            dispatch(logout());
-            localStorage.removeItem('token');
-            localStorage.removeItem('refreshToken');
-            window.location.href = '/signin';
-        }
-        // Optionally redirect the user to the login page or any other page
+    const toggleDrawer = () => {
+        setIsDrawerOpen(!isDrawerOpen);
+    };
+
+    const handleAvatarClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+        setAnchorEl(event.currentTarget);
+    };
+
+    const handleMenuClose = () => {
+        setAnchorEl(null);
+    };
+
+    const handleMenuSelect = (menu: string) => {
+        props.setSelectedMenu(menu);
 
     };
+
     return (
-
-
-        <AppBar position="static">
-            <Toolbar>
-                <Typography variant="h6" style={{flexGrow: 1}}>
-                    Adyanta IOT <h1>Welcome, {localStorage.getItem('userName')}!</h1>
-                </Typography>
-
-                {localStorage.getItem('token') ? (
+        <div>
+            <AppBar position="static" style={{ backgroundColor: '#1976D2' }}>
+                <Toolbar>
+                    <IconButton edge="start" color="inherit" onClick={toggleDrawer}>
+                        <MenuIcon />
+                    </IconButton>
+                    <Typography variant="h6" style={{ flexGrow: 1 }}>
+                        IoT Company
+                    </Typography>
                     <div>
-
-                        <Button onClick={()=>handleSignout()} color="inherit" >Log Out</Button>
+                        <IconButton color="inherit" onClick={handleAvatarClick}>
+                            <AccountCircleIcon />
+                        </IconButton>
+                        <Menu
+                            id="avatar-menu"
+                            anchorEl={anchorEl}
+                            open={Boolean(anchorEl)}
+                            onClose={handleMenuClose}
+                        >
+                            <MenuItem onClick={handleMenuClose}>{user ?user.fullName: '------'}</MenuItem>
+                            <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
+                            <MenuItem onClick={handleMenuClose}>Logout</MenuItem>
+                        </Menu>
                     </div>
-                ) : (
-                    <h1>Please sign in</h1>
-                )}
-
-            </Toolbar>
-        </AppBar>
+                </Toolbar>
+            </AppBar>
+            <Drawer anchor="left" open={isDrawerOpen} onClose={toggleDrawer}>
+                <div onClick={toggleDrawer}>
+                    {['Devices', 'Products' ].map((text, index) => (
+                        <ListItem key={text} disablePadding onClick={() => handleMenuSelect(text)}>
+                            <ListItemButton>
+                                <ListItemIcon>
+                                    {index % 2 === 0 ? <Inventory2Icon /> : <MemoryIcon />}
+                                </ListItemIcon>
+                                <ListItemText primary={text} />
+                            </ListItemButton>
+                        </ListItem>
+                    ))}
+                </div>
+            </Drawer>
+        </div>
     );
 }
 
-export default AuthNavBar;
+// Connect component to Redux store
+const connector = connect(mapState);
+
+export default connector(AuthNavBar);
