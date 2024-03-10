@@ -13,15 +13,15 @@ import {CssBaseline} from "@mui/material";
 const App: React.FC = () => {
     return (
         <ThemeProvider theme={theme}>
-        <AuthProvider>
             <CssBaseline />
+        <AuthProvider>
+
             <Router>
                 <Routes>
                     <Route path="/signin" element={<SignInForm/>}/>
                     <Route path="/signup" element={<SignUpForm/>}/>
                     <Route path="/" element={<Navigate to="/signin"/>}/>
                     <Route path="/dashboard" element={<Dashboard/>}/>
-
                 </Routes>
             </Router>
         </AuthProvider>

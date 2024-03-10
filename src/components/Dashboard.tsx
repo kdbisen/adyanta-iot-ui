@@ -1,7 +1,6 @@
 // Dashboard.tsx
 
 import React, {useState} from 'react';
-import SilentTokenRefresh from "../services/SilentTokenRefrsh.tsx";
 import AuthNavBar from "./AuthNavBar.tsx";
 import AddProductForm from "./AddProductForm.tsx";
 import ProductList from "./ProductList.tsx";
@@ -9,24 +8,22 @@ import DeviceList from "./DeviceList.tsx";
 import AddDeviceForm from "./AddDeviceForm.tsx";
 //import withAuth from '../services/withAuth.tsx';
 import {useAuth} from "../services/AuthContext.tsx";
+import {Typography} from "@mui/material";
 
 
 
 const Dashboard: React.FC = ( ) => {
-    const { user } = useAuth();
-    console.log(user)
+    const { userResponse } = useAuth();
+    console.log(userResponse)
     const [selectedMenu, setSelectedMenu] = useState('');
-
-
-
 
     return (
         <div>
             <AuthNavBar setSelectedMenu={menuTitle =>setSelectedMenu(menuTitle) }/>
-            <SilentTokenRefresh/>
+            {/*<SilentTokenRefresh/>*/}
 
             <div style={{display: 'flex'}}>
-
+                <Typography variant={"h2"}>Welcome {userResponse?.user.fullName}</Typography>
                 <div style={{flexGrow: 1, padding: '20px'}}>
                     {selectedMenu === 'Devices' && (
                         <>

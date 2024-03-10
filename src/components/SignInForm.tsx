@@ -4,6 +4,7 @@ import NavBar from "./NavBar.tsx";
 import {apiService} from "../services/ApiService.ts";
 import {AxiosResponse} from "axios";
 import { useAuth} from '../services/AuthContext';
+import { useNavigate } from 'react-router-dom';
 
 interface IUserResponse {
     user: IUser;
@@ -19,7 +20,8 @@ interface IUser {
 }
 
 const SignInForm: React.FC = () => {
-    const { loginUser } = useAuth();
+    const { loginUserResponse } = useAuth();
+    const navigate = useNavigate();
     const [credentials, setCredentials] = useState({email: '', password: ''});
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -33,32 +35,8 @@ const SignInForm: React.FC = () => {
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         const response: AxiosResponse<IUserResponse> = await apiService.postData<IUserResponse>('/auth/signin', credentials);
-
-//        const response: IUserResponse = await AuthService.login(credentials);
-        console.log(response)
-        loginUser(response.data.token, response.data.user);
-        window.location.href = '/dashboard';
-        /* if (response.data) {
-            // const userResponse: IUserResponse = response.data;
-          //   const token = userResponse.token;
-           //  loginUser(token);
-            // const refreshToken = userResponse.refreshToken;
-             //const user: IUser = userResponse.user;
-
-             // Save token to local storage
-           /!*  localStorage.setItem('token', token);
-             localStorage.setItem('refreshToken', refreshToken);
-             localStorage.setItem('fullName', user.fullName);
-             localStorage.setItem('email', user.email);
-              console.log(user)
-             // Dispatch login action with user details
-             let dispatch1 = dispatch(login(user));
-              console.log(dispatch1)*!/
-              // Redirect to the dashboard or any other protected route
-                window.location.href = '/dashboard'; // For example, redirect to the dashboard*!/
-         } else {
-             alert('Invalid username or password');
-         }*/
+        loginUserResponse(response.data)
+        navigate('/dashboard');
     };
 
 

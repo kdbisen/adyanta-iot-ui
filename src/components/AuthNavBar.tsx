@@ -40,9 +40,9 @@ interface Props  {
 
 
 function AuthNavBar(props: Props) {
-    const { user } = useAuth();
+    const { userResponse } = useAuth();
     console.log(props)
-    console.log(user)
+    console.log(userResponse)
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
@@ -65,7 +65,7 @@ function AuthNavBar(props: Props) {
 
     return (
         <div>
-            <AppBar position="static" style={{ backgroundColor: '#1976D2' }}>
+            <AppBar position="static" style={{ backgroundColor: '#013219' }}>
                 <Toolbar>
                     <IconButton edge="start" color="inherit" onClick={toggleDrawer}>
                         <MenuIcon />
@@ -83,7 +83,7 @@ function AuthNavBar(props: Props) {
                             open={Boolean(anchorEl)}
                             onClose={handleMenuClose}
                         >
-                            <MenuItem onClick={handleMenuClose}>{user ?user.fullName: '------'}</MenuItem>
+                            <MenuItem onClick={handleMenuClose}>{userResponse ?userResponse.user.fullName: '------'}</MenuItem>
                             <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
                             <MenuItem onClick={handleMenuClose}>Logout</MenuItem>
                         </Menu>

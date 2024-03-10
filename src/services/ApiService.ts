@@ -44,7 +44,9 @@ export const apiService = {
             return response;
         } catch (error) {
             console.log(error)
+            alert(error);
             throw error;
+
         }
     },
 

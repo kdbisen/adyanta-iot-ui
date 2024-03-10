@@ -2,10 +2,9 @@ import React, {useState, ChangeEvent} from 'react';
 import {TextField, Button, Grid, Typography, Container, Paper} from '@mui/material';
 import {apiService} from "../services/ApiService.ts";
 import NavBar from "./NavBar.tsx";
-import {login} from "../redux/authSlice.ts";
-import {useDispatch} from "react-redux";
 import {useAuth} from "../services/AuthContext.tsx";
 import {AxiosResponse} from "axios";
+import {useNavigate} from "react-router-dom";
 
 interface FormData {
     fullName: string;
@@ -28,8 +27,8 @@ interface IUser {
 
 
 const SignUpForm: React.FC = () => {
-    const { loginUser } = useAuth();
-    const dispatch = useDispatch();
+    const { loginUserResponse } = useAuth();
+    const navigate = useNavigate();
 
     const [formData, setFormData] = useState<FormData>({
 
@@ -52,32 +51,11 @@ const SignUpForm: React.FC = () => {
         try {
             formData.roles = ['ROLE_USER'];
             const response: AxiosResponse<IUserResponse>  = await apiService.postData<IUserResponse>('/auth/register', formData);
-
-
-
-            if (response.data) {
-                const userResponse: IUserResponse = response.data;
-                const token = userResponse.token;
-                loginUser(token);
-                const refreshToken = userResponse.refreshToken;
-                const user: IUser = userResponse.user;
-                // Save token to local storage
-                localStorage.setItem('token', token);
-                localStorage.setItem('refreshToken', refreshToken);
-                localStorage.setItem('fullName', user.fullName);
-                localStorage.setItem('email', user.email);
-                console.log(user)
-                // Dispatch login action with user details
-                let dispatch1 = dispatch(login(user));
-                console.log(dispatch1)
-                // Redirect to the dashboard or any other protected route
-                window.location.href = '/dashboard'; // For example, redirect to the dashboard*!/
-            } else {
-                alert('Invalid username or password');
-            }
-
+            loginUserResponse(response.data)
+            navigate('/dashboard');
         } catch (error) {
             console.error('Error posting data:', error);
+            alert('Error posting data: '+ error);
         }
     };
 
