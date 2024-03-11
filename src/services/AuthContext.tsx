@@ -44,6 +44,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
     const loginUserResponse = (  userRes: IUserResponse) => {
         console.log('loginUserResponse', userRes);
+        localStorage.getItem(userRes.token)
         setUserResponse(userRes)
     }
     const loginUser = (token: string, user: User) => {

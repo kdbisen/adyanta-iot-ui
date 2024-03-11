@@ -27,6 +27,7 @@ export const apiService = {
     // Example method to fetch data
     fetchData: async <T>(url: string): ApiResponse<T> => {
         try {
+
             const response = await axiosInstance.get<T>(url);
             return response;
         } catch (error) {
